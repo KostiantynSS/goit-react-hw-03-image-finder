@@ -10,10 +10,10 @@ export class App extends Component {
     page: 1,
     query: '',
     photos: [],
-    loadMore: true,
+    loadMore: false,
   };
   onSubmitSearchForm = data => {
-    this.setState({ query: data });
+    this.setState({ query: data, photos: [], page: 1 });
   };
   async componentDidUpdate(prevProps, prevState) {
     const { page, query } = this.state;
@@ -21,12 +21,17 @@ export class App extends Component {
       const {
         data: { hits, totalHits },
       } = await fetchPhotos({ q: query, page: page });
-      const search = await fetchPhotos({ q: query, page: page });
-      console.log(search.data);
-      this.setState({
-        photos: [...prevState.photos, ...hits],
-        loadMore: this.state.page < Math.ceil(totalHits / 12),
-      });
+
+      prevState.query === query
+        ? this.setState({
+            photos: [...prevState.photos, ...hits],
+            loadMore: this.state.page < Math.ceil(totalHits / 12),
+          })
+        : this.setState({
+            photos: hits,
+            loadMore: this.state.page < Math.ceil(totalHits / 12),
+            page: 1,
+          });
     }
   }
   loadMoreBtnHandler = () => {
@@ -39,7 +44,7 @@ export class App extends Component {
     return (
       <div className={css.App}>
         <SearchBar onSubmit={this.onSubmitSearchForm} />
-        <ImageGallery photos={photos} />
+        {photos.length > 0 && <ImageGallery photos={photos} />}
         {loadMore && <Button onClick={this.loadMoreBtnHandler} />}
       </div>
     );
