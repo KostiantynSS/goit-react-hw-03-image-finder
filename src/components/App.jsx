@@ -1,7 +1,6 @@
 import { Component } from 'react';
 import SearchBar from './SearchBar/SearchBar';
 import ImageGallery from './ImageGallery/ImageGallery';
-import ImageGalleryItem from './ImageGalleryItem/ImageGalleryItem';
 import fetchPhotos from 'helpers/fetchPhotos';
 import css from 'styles.module.css';
 
