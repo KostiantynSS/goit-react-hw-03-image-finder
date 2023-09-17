@@ -4,11 +4,11 @@ const KEY = '38665853-fe99969bd23bb921fc896ab74';
 axios.defaults.baseURL = 'https://pixabay.com/api/';
 axios.defaults.params = {
   key: KEY,
-  q: 'cat',
+  q: '',
   page: 1,
   image_type: 'photo',
   orientation: 'horisontal',
-  per_page: 20,
+  per_page: 12,
 };
 
 async function fetchPhotos(params) {
