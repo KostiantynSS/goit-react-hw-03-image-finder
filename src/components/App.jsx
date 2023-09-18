@@ -11,27 +11,33 @@ export class App extends Component {
     query: '',
     photos: [],
     loadMore: false,
+    isLoading: false,
   };
+
   onSubmitSearchForm = data => {
+    if (data === this.state.query) return;
     this.setState({ query: data, photos: [], page: 1 });
   };
-  async componentDidUpdate(prevProps, prevState) {
-    const { page, query } = this.state;
-    if (page !== prevState.page || query !== prevState.query) {
-      const {
-        data: { hits, totalHits },
-      } = await fetchPhotos({ q: query, page: page });
 
-      prevState.query === query
-        ? this.setState({
-            photos: [...prevState.photos, ...hits],
+  async componentDidUpdate(_, prevState) {
+    const { page, query } = this.state;
+
+    if (page !== prevState.page || query !== prevState.query) {
+      this.setState({ isLoading: true });
+      try {
+        const { hits, totalHits } = await fetchPhotos({ q: query, page: page });
+
+        if (hits.length > 0) {
+          this.setState(prev => ({
+            photos: [...prev.photos, ...hits],
             loadMore: this.state.page < Math.ceil(totalHits / 12),
-          })
-        : this.setState({
-            photos: hits,
-            loadMore: this.state.page < Math.ceil(totalHits / 12),
-            page: 1,
-          });
+          }));
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        this.setState({ isLoading: false });
+      }
     }
   }
   loadMoreBtnHandler = () => {

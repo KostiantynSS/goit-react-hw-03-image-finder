@@ -11,13 +11,9 @@ axios.defaults.params = {
   per_page: 12,
 };
 
-async function fetchPhotos(params) {
-  try {
-    const response = await axios({ params: params });
-    return response;
-  } catch (error) {
-    throw new Error('Error fetching images:', error);
-  }
-}
+const fetchPhotos = async params => {
+  const { data } = await axios({ params: params });
+  return data;
+};
 
 export default fetchPhotos;

@@ -1,13 +1,13 @@
 import { Component } from 'react';
 import css from './searchBar.module.css';
 class SearchBar extends Component {
-  state = {};
   handleSubmit = e => {
     e.preventDefault();
     const { elements } = e.currentTarget;
     const query = elements[1].value;
     if (query.trim() === '') return;
     this.props.onSubmit(query);
+    e.currentTarget.reset();
   };
   render() {
     return (
