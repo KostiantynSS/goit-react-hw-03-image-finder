@@ -4,6 +4,7 @@ import ImageGallery from './ImageGallery/ImageGallery';
 import fetchPhotos from 'helpers/fetchPhotos';
 import css from 'styles.module.css';
 import Button from './Button/Button';
+import Loader from './Loader/Loader';
 
 export class App extends Component {
   state = {
@@ -46,11 +47,12 @@ export class App extends Component {
     }));
   };
   render() {
-    const { photos, loadMore } = this.state;
+    const { photos, loadMore, isLoading } = this.state;
     return (
       <div className={css.App}>
         <SearchBar onSubmit={this.onSubmitSearchForm} />
         {photos.length > 0 && <ImageGallery photos={photos} />}
+        {isLoading && <Loader />}
         {loadMore && <Button onClick={this.loadMoreBtnHandler} />}
       </div>
     );
