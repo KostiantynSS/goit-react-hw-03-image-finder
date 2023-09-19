@@ -13,6 +13,7 @@ axios.defaults.params = {
 
 const fetchPhotos = async params => {
   const { data } = await axios({ params: params });
+
   return data;
 };
 

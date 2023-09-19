@@ -2,9 +2,10 @@ import { Component } from 'react';
 import SearchBar from './SearchBar/SearchBar';
 import ImageGallery from './ImageGallery/ImageGallery';
 import fetchPhotos from 'helpers/fetchPhotos';
-import css from 'styles.module.css';
+import css from 'app.module.css';
 import Button from './Button/Button';
 import Loader from './Loader/Loader';
+import Modal from './Modal/Modal';
 
 export class App extends Component {
   state = {
@@ -13,6 +14,9 @@ export class App extends Component {
     photos: [],
     loadMore: false,
     isLoading: false,
+    showModal: false,
+    src: null,
+    alt: null,
   };
 
   onSubmitSearchForm = data => {
@@ -46,14 +50,29 @@ export class App extends Component {
       page: prev.page + 1,
     }));
   };
+
+  openModalHandler = () => {
+    this.setState(prev => ({
+      showModal: !prev.showModal,
+    }));
+  };
+  largePhoto = ({ src, alt }) => {
+    this.setState({ src: src, alt: alt });
+    this.openModalHandler();
+  };
   render() {
-    const { photos, loadMore, isLoading } = this.state;
+    const { photos, loadMore, isLoading, showModal, src, alt } = this.state;
     return (
       <div className={css.App}>
         <SearchBar onSubmit={this.onSubmitSearchForm} />
-        {photos.length > 0 && <ImageGallery photos={photos} />}
+        {photos.length > 0 && (
+          <ImageGallery photos={photos} onClick={this.largePhoto} />
+        )}
         {isLoading && <Loader />}
         {loadMore && <Button onClick={this.loadMoreBtnHandler} />}
+        {showModal && (
+          <Modal modalHandler={this.openModalHandler} src={src} alt={alt} />
+        )}
       </div>
     );
   }
